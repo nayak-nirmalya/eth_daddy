@@ -6,14 +6,20 @@ const tokens = (token) => {
 }
 
 describe('ETHDaddy', () => {
-  it('has a name', async () => {
+  let ethDaddy
+
+  beforeEach(async () => {
     const ETHDaddy = await ethers.getContractFactory('ETHDaddy')
-    let ethDaddy = await ETHDaddy.deploy('ETH Daddy', 'ETHD')
+    ethDaddy = await ETHDaddy.deploy('ETH Daddy', 'ETHD')
+  })
 
-    let result = await ethDaddy.name()
+  it('should have a name', async () => {
+    const result = await ethDaddy.name()
     expect(result).to.equal('ETH Daddy')
+  })
 
-    result = await ethDaddy.symbol()
+  it('should have a symbol', async () => {
+    const result = await ethDaddy.symbol()
     expect(result).to.equal('ETHD')
   })
 })
