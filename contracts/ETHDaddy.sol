@@ -47,6 +47,11 @@ contract ETHDaddy is ERC721 {
         _safeMint(msg.sender, _id);
     }
 
+    function withdraw() public onlyOwner {
+        (bool success, ) = owner.call{value: address(this).balance}("");
+        require(success, "Transfer of ETH Failed!");
+    }
+
     function getDomain(uint256 _id) public view returns (Domain memory) {
         return domains[_id];
     }

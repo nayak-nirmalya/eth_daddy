@@ -124,7 +124,7 @@ describe('ETHDaddy', () => {
     })
 
     it(`should revert with "Not Enough ETH!" if msg.value is not enough`, async () => {
-      transaction = await ethDaddy
+      const transaction = await ethDaddy
         .connect(deployer)
         .list('nirmalya.eth', tokens(10))
       await transaction.wait()
@@ -133,6 +133,40 @@ describe('ETHDaddy', () => {
           value: tokens(5),
         }),
       ).to.be.revertedWith('Not Enough ETH!')
+    })
+  })
+
+  describe('Withdraw', () => {
+    const ID = 1
+    const AMOUNT = tokens(10)
+    let balanceBefore
+
+    beforeEach(async () => {
+      balanceBefore = await ethers.provider.getBalance(deployer.address)
+
+      let transaction = await ethDaddy.connect(owner).mint(ID, {
+        value: AMOUNT,
+      })
+      await transaction.wait()
+
+      transaction = await ethDaddy.connect(deployer).withdraw()
+      await transaction.wait()
+    })
+
+    it(`should revert with message "Not Owner!" if anyone except owner tries to withdraw fund`, async () => {
+      await expect(ethDaddy.connect(owner).withdraw()).to.be.revertedWith(
+        'Not Owner!',
+      )
+    })
+
+    it('should update the contract owner balance', async () => {
+      const balanceAfter = await ethers.provider.getBalance(deployer.address)
+      expect(balanceAfter).to.be.greaterThan(balanceBefore)
+    })
+
+    it('should empty smart contract balance', async () => {
+      const balanceOfContract = await ethDaddy.getBalance()
+      expect(balanceOfContract).to.be.equal(0)
     })
   })
 })
