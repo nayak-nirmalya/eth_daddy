@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract ETHDaddy is ERC721 {
     address public owner;
     uint256 public maxSupply;
+    uint256 public totalSupply;
 
     struct Domain {
         string name;
@@ -34,11 +35,23 @@ contract ETHDaddy is ERC721 {
     }
 
     // Buy Domain
-    function mint(uint256 _id) public {
+    function mint(uint256 _id) public payable {
+        require(_id != 0, "ID Can't be 0.");
+        require(_id <= maxSupply, "Invalid ID!");
+        require(domains[_id].isOwned == false, "Domain Already Owned!");
+        require(msg.value == domains[_id].cost, "Not Enough ETH!");
+
+        domains[_id].isOwned = true;
+        totalSupply += 1;
+
         _safeMint(msg.sender, _id);
     }
 
     function getDomain(uint256 _id) public view returns (Domain memory) {
         return domains[_id];
+    }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
     }
 }
