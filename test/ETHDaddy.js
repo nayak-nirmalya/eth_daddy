@@ -50,7 +50,7 @@ describe('ETHDaddy', () => {
 
   describe('Domain', () => {
     it('should return domain attributes', async () => {
-      const domain = await ethDaddy.domains(1)
+      const domain = await ethDaddy.getDomain(1)
       expect(domain.name).to.be.equal('nirmalya.eth')
       expect(domain.cost).to.be.equal(tokens(10))
       expect(domain.isOwned).to.be.equal(false)
@@ -60,6 +60,21 @@ describe('ETHDaddy', () => {
       await expect(
         ethDaddy.connect(owner).list('nirmalya.eth', tokens(10)),
       ).to.be.revertedWith('Not Owner!')
+    })
+  })
+
+  describe('Minting', () => {
+    const ID = 1
+    const AMOUNT = tokens(10)
+
+    beforeEach(async () => {
+      const transaction = await ethDaddy.connect(owner).mint(ID)
+      await transaction.wait()
+    })
+
+    it(`shlould update the owner`, async () => {
+      const ownerOfAddress = await ethDaddy.ownerOf(ID)
+      expect(ownerOfAddress).to.be.equal(owner.address)
     })
   })
 })
