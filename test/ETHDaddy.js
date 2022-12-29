@@ -18,6 +18,12 @@ describe('ETHDaddy', () => {
     // Deploy Contract
     const ETHDaddy = await ethers.getContractFactory(CONTRACT_NAME)
     ethDaddy = await ETHDaddy.deploy(NAME, SYMBOL)
+
+    // List a Domain
+    const transaction = await ethDaddy
+      .connect(deployer)
+      .list('nirmalya.eth', tokens(10))
+    await transaction.wait()
   })
 
   describe('Deployment', () => {
@@ -34,6 +40,15 @@ describe('ETHDaddy', () => {
     it('should set the owner', async () => {
       const result = await ethDaddy.owner()
       expect(result).to.equal(deployer.address)
+    })
+  })
+
+  describe('Domain', () => {
+    it('should return domain attributes', async () => {
+      const domain = await ethDaddy.domains(1)
+      expect(domain.name).to.be.equal('nirmalya.eth')
+      expect(domain.cost).to.be.equal(tokens(10))
+      expect(domain.isOwned).to.be.equal(false)
     })
   })
 })
