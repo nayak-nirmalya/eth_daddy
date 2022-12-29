@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract ETHDaddy is ERC721 {
     address public owner;
+    uint256 public maxSupply;
 
     struct Domain {
         string name;
@@ -14,6 +15,11 @@ contract ETHDaddy is ERC721 {
 
     mapping(uint256 => Domain) public domains;
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not Owner!");
+        _;
+    }
+
     constructor(string memory _name, string memory _symbol)
         ERC721(_name, _symbol)
     {
@@ -21,10 +27,9 @@ contract ETHDaddy is ERC721 {
     }
 
     // List Domains
-    function list(string memory _name, uint256 _cost) public {
+    function list(string memory _name, uint256 _cost) public onlyOwner {
+        maxSupply += 1;
         // Save the Domain
-        domains[1] = Domain({name: _name, cost: _cost, isOwned: false});
-
-        // Update Total Domain Count
+        domains[maxSupply] = Domain({name: _name, cost: _cost, isOwned: false});
     }
 }

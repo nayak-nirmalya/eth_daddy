@@ -41,6 +41,11 @@ describe('ETHDaddy', () => {
       const result = await ethDaddy.owner()
       expect(result).to.equal(deployer.address)
     })
+
+    it('should check for maxSupply', async () => {
+      const result = await ethDaddy.maxSupply()
+      expect(result).to.equal(1)
+    })
   })
 
   describe('Domain', () => {
@@ -49,6 +54,12 @@ describe('ETHDaddy', () => {
       expect(domain.name).to.be.equal('nirmalya.eth')
       expect(domain.cost).to.be.equal(tokens(10))
       expect(domain.isOwned).to.be.equal(false)
+    })
+
+    it('should revert with "Not Owner!" if anyone except owner calls the list function', async () => {
+      await expect(
+        ethDaddy.connect(owner).list('nirmalya.eth', tokens(10)),
+      ).to.be.revertedWith('Not Owner!')
     })
   })
 })
