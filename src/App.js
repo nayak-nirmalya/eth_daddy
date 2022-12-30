@@ -10,21 +10,25 @@ import Domain from './components/Domain'
 import ETHDaddy from './abis/ETHDaddy.json'
 
 // Config
-import config from './config.json';
+import config from './config.json'
 
 function App() {
+  const [account, setAccount] = useState(null)
+
+  const loadBlockchainData = async () => {}
+
+  useEffect(() => {
+    loadBlockchainData()
+  }, [])
 
   return (
     <div>
-
-      <div className='cards__section'>
-
-        <h2 className='cards__title'>Welcome to ETH Daddy</h2>
-
+      <Navigation account={account} setAccount={setAccount} />
+      <div className="cards__section">
+        <h2 className="cards__title">Welcome to ETH Daddy!</h2>
       </div>
-
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
