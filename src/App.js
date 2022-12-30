@@ -24,8 +24,15 @@ function App() {
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
+      <Search />
       <div className="cards__section">
-        <h2 className="cards__title">Welcome to ETH Daddy!</h2>
+        <h2 className="cards__title">Why you need a domain name.</h2>
+        <p className="cards__description">
+          Own your custom username, use it across services, and be able to store
+          an avatar and other profile data.
+        </p>
+        <hr />
+        <div className="cards"></div>
       </div>
     </div>
   )
