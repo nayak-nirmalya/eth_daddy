@@ -16,6 +16,7 @@ function App() {
   const [account, setAccount] = useState(null)
   const [provider, setProvider] = useState(null)
   const [ethDaddy, setETHDaddy] = useState(null)
+  const [domains, setDomains] = useState([])
 
   const loadBlockchainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -31,6 +32,13 @@ function App() {
     setETHDaddy(ethDaddy)
 
     const maxSupply = await ethDaddy.maxSupply()
+    const domains = []
+
+    for (let i = 1; i <= maxSupply; i++) {
+      const domain = await ethDaddy.getDomain(i)
+      domains.push(domain)
+    }
+    setDomains(domains)
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({
@@ -56,7 +64,11 @@ function App() {
           an avatar and other profile data.
         </p>
         <hr />
-        <div className="cards"></div>
+        <div className="cards">
+          {domains.map((domain) => (
+            <p>{domain.name}</p>
+          ))}
+        </div>
       </div>
     </div>
   )
