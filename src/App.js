@@ -65,8 +65,14 @@ function App() {
         </p>
         <hr />
         <div className="cards">
-          {domains.map((domain) => (
-            <p>{domain.name}</p>
+          {domains.map((domain, index) => (
+            <Domain
+              domain={domain}
+              ethDaddy={ethDaddy}
+              provider={provider}
+              id={index + 1}
+              key={index}
+            />
           ))}
         </div>
       </div>
